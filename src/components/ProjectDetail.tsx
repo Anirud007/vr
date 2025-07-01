@@ -776,6 +776,477 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
     );
   };
 
+  const renderModuleGenerationTab = () => {
+    // Mock data for generated modules
+    const modulesByFlow = {
+      "Admin User - Web": [
+        {
+          id: "user-mgmt-1",
+          name: "User Management Module",
+          description:
+            "Comprehensive user account management with role-based permissions",
+          status: "generated",
+          components: ["UserList", "UserForm", "RoleManager", "PermissionGrid"],
+          apis: ["/api/users", "/api/roles", "/api/permissions"],
+          features: [
+            "CRUD operations",
+            "Bulk actions",
+            "Export/Import",
+            "Audit logs",
+          ],
+        },
+        {
+          id: "auth-1",
+          name: "Authentication Module",
+          description: "Secure authentication system with multi-factor support",
+          status: "generated",
+          components: ["LoginForm", "SignupForm", "MFASetup", "PasswordReset"],
+          apis: ["/api/auth/login", "/api/auth/register", "/api/auth/mfa"],
+          features: [
+            "JWT tokens",
+            "OAuth integration",
+            "Session management",
+            "Security policies",
+          ],
+        },
+        {
+          id: "dashboard-1",
+          name: "Admin Dashboard Module",
+          description: "Real-time analytics and system monitoring dashboard",
+          status: "generating",
+          components: [
+            "MetricsGrid",
+            "ChartComponents",
+            "AlertCenter",
+            "SystemStatus",
+          ],
+          apis: ["/api/analytics", "/api/system/health", "/api/alerts"],
+          features: [
+            "Real-time updates",
+            "Custom widgets",
+            "Data visualization",
+            "Export reports",
+          ],
+        },
+      ],
+      "End User - Web": [
+        {
+          id: "profile-1",
+          name: "User Profile Module",
+          description: "Personal profile management and customization",
+          status: "generated",
+          components: [
+            "ProfileView",
+            "ProfileEdit",
+            "AvatarUpload",
+            "PreferencesPanel",
+          ],
+          apis: ["/api/profile", "/api/profile/avatar", "/api/preferences"],
+          features: [
+            "Profile editing",
+            "Avatar management",
+            "Privacy settings",
+            "Notifications",
+          ],
+        },
+        {
+          id: "content-1",
+          name: "Content Consumption Module",
+          description: "Interactive content browsing and consumption interface",
+          status: "generated",
+          components: [
+            "ContentGrid",
+            "ContentViewer",
+            "SearchFilters",
+            "BookmarkManager",
+          ],
+          apis: ["/api/content", "/api/search", "/api/bookmarks"],
+          features: [
+            "Content discovery",
+            "Advanced search",
+            "Bookmarking",
+            "Sharing",
+          ],
+        },
+        {
+          id: "onboarding-1",
+          name: "User Onboarding Module",
+          description: "Guided onboarding experience for new users",
+          status: "pending",
+          components: [
+            "WelcomeFlow",
+            "StepProgress",
+            "TutorialOverlay",
+            "CompletionReward",
+          ],
+          apis: ["/api/onboarding/progress", "/api/tutorials"],
+          features: [
+            "Progressive disclosure",
+            "Interactive tutorials",
+            "Progress tracking",
+            "Gamification",
+          ],
+        },
+      ],
+    };
+
+    const [selectedFlow, setSelectedFlow] = useState("Admin User - Web");
+    const [chatMessages, setChatMessages] = useState([
+      {
+        id: 1,
+        type: "assistant",
+        content:
+          "Hello! I'm your AI assistant for module generation. How can I help you streamline your business processes today?",
+        timestamp: new Date(Date.now() - 5 * 60000),
+      },
+      {
+        id: 2,
+        type: "user",
+        content:
+          "I need to create a new module for customer data processing, focusing on segmentation and personalized outreach.",
+        timestamp: new Date(Date.now() - 3 * 60000),
+      },
+      {
+        id: 3,
+        type: "assistant",
+        content:
+          "Excellent! For customer data processing and segmentation, let me define the key data points: demographics, purchase history, engagement metrics. What are the primary goals for personalized outreach? E.g., increasing conversion, improving retention, or promoting new products?",
+        timestamp: new Date(Date.now() - 1 * 60000),
+      },
+    ]);
+    const [newMessage, setNewMessage] = useState("");
+
+    const getStatusColor = (status: string) => {
+      switch (status) {
+        case "generated":
+          return "bg-green-100 text-green-700 border-green-200";
+        case "generating":
+          return "bg-blue-100 text-blue-700 border-blue-200";
+        case "pending":
+          return "bg-yellow-100 text-yellow-700 border-yellow-200";
+        default:
+          return "bg-gray-100 text-gray-700 border-gray-200";
+      }
+    };
+
+    const getStatusIcon = (status: string) => {
+      switch (status) {
+        case "generated":
+          return <CheckCircle className="w-4 h-4" />;
+        case "generating":
+          return <Clock className="w-4 h-4 animate-spin" />;
+        case "pending":
+          return <AlertCircle className="w-4 h-4" />;
+        default:
+          return <Clock className="w-4 h-4" />;
+      }
+    };
+
+    const handleSendMessage = () => {
+      if (!newMessage.trim()) return;
+
+      const userMessage = {
+        id: chatMessages.length + 1,
+        type: "user" as const,
+        content: newMessage,
+        timestamp: new Date(),
+      };
+
+      setChatMessages([...chatMessages, userMessage]);
+      setNewMessage("");
+
+      // Simulate AI response
+      setTimeout(() => {
+        const aiResponse = {
+          id: chatMessages.length + 2,
+          type: "assistant" as const,
+          content:
+            "I can help you with that! Based on the uploaded image and your requirements, I'll analyze the design patterns and suggest optimal module structures. Let me process this information...",
+          timestamp: new Date(),
+        };
+        setChatMessages((prev) => [...prev, aiResponse]);
+      }, 1000);
+    };
+
+    return (
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-0 pb-4 border-b border-gray-200">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <Settings className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                AI-Powered Module Generation
+              </h1>
+              <p className="text-sm text-gray-600">
+                Craft intelligent automation modules with our advanced AI chat.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 items-center">
+            <button className="border border-gray-300 rounded-xl px-4 py-2 flex items-center gap-2 text-sm bg-white hover:bg-gray-50 font-medium shadow-sm">
+              <Eye className="h-4 w-4" /> View History
+            </button>
+            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl px-4 py-2 flex items-center gap-2 text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-105 transition-all">
+              <Plus className="h-4 w-4" /> New Module
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Panel - Generated Modules */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Flow Selector */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Select Flow
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {Object.keys(modulesByFlow).map((flow) => (
+                  <button
+                    key={flow}
+                    onClick={() => setSelectedFlow(flow)}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                      selectedFlow === flow
+                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    {flow}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Generated Modules List */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Generated Modules for {selectedFlow}
+                </h2>
+                <span className="text-sm text-gray-600">
+                  {modulesByFlow[selectedFlow as keyof typeof modulesByFlow]
+                    ?.length || 0}{" "}
+                  modules
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                {modulesByFlow[selectedFlow as keyof typeof modulesByFlow]?.map(
+                  (module) => (
+                    <div
+                      key={module.id}
+                      className="bg-gradient-to-r from-white to-gray-50/50 border border-gray-200 rounded-xl p-5 hover:shadow-lg hover:border-blue-300 transition-all duration-300"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-gradient-to-r from-purple-100 to-blue-100 rounded-lg flex items-center justify-center">
+                            <Layers className="w-5 h-5 text-purple-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-gray-900">
+                              {module.name}
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              {module.description}
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(module.status)}`}
+                        >
+                          {getStatusIcon(module.status)}
+                          {module.status}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div>
+                          <p className="font-semibold text-gray-700 mb-1">
+                            Components ({module.components.length})
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {module.components.slice(0, 2).map((comp, idx) => (
+                              <span
+                                key={idx}
+                                className="bg-blue-100 text-blue-700 px-2 py-1 rounded"
+                              >
+                                {comp}
+                              </span>
+                            ))}
+                            {module.components.length > 2 && (
+                              <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                                +{module.components.length - 2}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div>
+                          <p className="font-semibold text-gray-700 mb-1">
+                            APIs ({module.apis.length})
+                          </p>
+                          <div className="space-y-1">
+                            {module.apis.slice(0, 2).map((api, idx) => (
+                              <code
+                                key={idx}
+                                className="block bg-gray-100 text-gray-700 px-2 py-1 rounded text-[10px]"
+                              >
+                                {api}
+                              </code>
+                            ))}
+                            {module.apis.length > 2 && (
+                              <span className="text-gray-500">
+                                +{module.apis.length - 2} more
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div>
+                          <p className="font-semibold text-gray-700 mb-1">
+                            Features ({module.features.length})
+                          </p>
+                          <ul className="space-y-1">
+                            {module.features.slice(0, 2).map((feature, idx) => (
+                              <li key={idx} className="flex items-center gap-1">
+                                <div className="w-1 h-1 bg-green-500 rounded-full"></div>
+                                <span className="text-gray-600">{feature}</span>
+                              </li>
+                            ))}
+                            {module.features.length > 2 && (
+                              <li className="text-gray-500">
+                                +{module.features.length - 2} more
+                              </li>
+                            )}
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <Clock className="w-3 h-3" />
+                          Generated 2 hours ago
+                        </div>
+                        <div className="flex gap-2">
+                          <button className="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors">
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <button className="text-gray-600 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                            <Download className="w-4 h-4" />
+                          </button>
+                          <button className="text-purple-600 hover:bg-purple-50 p-2 rounded-lg transition-colors">
+                            <Edit3 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Panel - AI Chatbot */}
+          <div className="bg-gradient-to-br from-white to-blue-50/30 rounded-2xl shadow-lg border border-blue-100 flex flex-col h-[800px]">
+            {/* Chat Header */}
+            <div className="p-4 border-b border-blue-200">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <Brain className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900">AI Assistant</h3>
+                  <p className="text-xs text-gray-600">
+                    Online • Ready to help
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Reference Image */}
+            <div className="p-4 border-b border-blue-200">
+              <p className="text-sm font-semibold text-gray-700 mb-2">
+                Reference Design
+              </p>
+              <div className="relative">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F27bca98306f84be092672e37c6cd85fd%2F2e8c094371cf49918036551581b5a8cb?format=webp&width=800"
+                  alt="Reference design for module generation"
+                  className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                />
+                <div className="absolute top-2 right-2">
+                  <button className="bg-white/90 backdrop-blur-sm p-1 rounded text-gray-600 hover:bg-white transition-colors">
+                    <Maximize2 className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">
+                AI can reference this design for module suggestions
+              </p>
+            </div>
+
+            {/* Chat Messages */}
+            <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+              {chatMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`max-w-[80%] p-3 rounded-2xl ${
+                      message.type === "user"
+                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                        : "bg-white border border-gray-200 text-gray-800 shadow-sm"
+                    }`}
+                  >
+                    <p className="text-sm">{message.content}</p>
+                    <p
+                      className={`text-xs mt-1 ${message.type === "user" ? "text-blue-100" : "text-gray-500"}`}
+                    >
+                      {message.timestamp.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Chat Input */}
+            <div className="p-4 border-t border-blue-200">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                  placeholder="Describe your automation needs or ask for module refinement..."
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                  <Paperclip className="w-4 h-4" />
+                </button>
+                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                  <Upload className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleSendMessage}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-2 rounded-xl hover:shadow-md transition-all"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderFlowMappingTab = () => {
     // Mock data for flows and metrics
     const flows = [
@@ -1050,6 +1521,8 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
           renderClassificationTab()
         ) : activeTab === "flow-mapping" ? (
           renderFlowMappingTab()
+        ) : activeTab === "modules" ? (
+          renderModuleGenerationTab()
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Main Content */}
