@@ -51,7 +51,8 @@ import {
   Maximize2,
   Minimize2,
   RefreshCw,
-  Zap as Lightning
+  Zap as Lightning,
+  Plus
 } from 'lucide-react';
 import { Project } from '../types';
 import { useAuth } from '../hooks/useAuth';
@@ -700,6 +701,167 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack })
     );
   };
 
+  const renderFlowMappingTab = () => {
+    // Mock data for flows and metrics
+    const flows = [
+      {
+        id: 1,
+        persona: 'Admin User',
+        platform: 'Web',
+        status: 'active',
+        description: 'Administrative workflow for web platform management and user oversight',
+        actions: ['User management', 'System configuration', 'Analytics dashboard', '+1 more'],
+      },
+      {
+        id: 2,
+        persona: 'End User',
+        platform: 'Web',
+        status: 'active',
+        description: 'Standard user experience flow for web platform interaction',
+        actions: ['Account registration', 'Profile setup', 'Content consumption', '+1 more'],
+      },
+    ];
+    const metrics = {
+      totalFlows: 2,
+      keyActions: 8,
+      platformDistribution: { Web: 2 },
+      personaTypes: { 'Admin User': 1, 'End User': 1 },
+      flowStatus: { Active: 2 },
+    };
+    return (
+      <main className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 py-8 px-2 sm:px-6">
+        {/* Left main content */}
+        <section className="bg-white rounded-lg border border-gray-200 p-6 flex-1 max-w-full md:max-w-3xl flex flex-col">
+          <header className="flex justify-between items-center mb-4">
+            <h1 className="text-lg font-semibold text-gray-900">
+              Flow Mapping for <span className="italic">SOW.pdf</span>
+            </h1>
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded px-3 py-1.5"
+            >
+              <Plus className="w-4 h-4" />
+              Manage Flows
+            </button>
+          </header>
+          <p className="text-sm text-gray-700 mb-4">Persona-Platform Flows</p>
+          {/* Flow cards */}
+          {flows.map(flow => (
+            <article key={flow.id} className="border border-gray-200 rounded-md p-4 mb-4 text-gray-700 text-sm">
+              <header className="flex flex-wrap items-center gap-2 mb-1">
+                <h2 className="font-semibold text-gray-900">{flow.persona} - {flow.platform}</h2>
+                <span className="bg-green-100 text-green-700 text-[10px] font-semibold rounded-full px-2 py-0.5">{flow.status}</span>
+              </header>
+              <p className="mb-2 text-xs text-gray-600">{flow.description}</p>
+              <div className="mb-2 flex flex-wrap gap-2 text-xs text-gray-600">
+                <span>
+                  Platform:
+                  <span className="bg-gray-200 text-gray-800 font-semibold rounded px-1.5 py-0.5 ml-1">{flow.platform}</span>
+                </span>
+                <span>
+                  Persona:
+                  <span className="bg-gray-200 text-gray-800 font-semibold rounded px-1.5 py-0.5 ml-1">{flow.persona}</span>
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {flow.actions.map((action, idx) => (
+                  <span key={idx} className={action.includes('+')
+                    ? 'bg-gray-200 text-gray-600 text-xs font-semibold rounded px-2 py-0.5'
+                    : 'bg-blue-200 text-blue-700 text-xs font-semibold rounded px-2 py-0.5'}>
+                    {action}
+                  </span>
+                ))}
+              </div>
+              <div className="flex justify-end gap-3 mt-2">
+                <button aria-label={`Edit ${flow.persona} - ${flow.platform} flow`} className="text-gray-600 hover:text-gray-900">
+                  <Edit3 className="w-4 h-4" />
+                </button>
+                <button aria-label={`Delete ${flow.persona} - ${flow.platform} flow`} className="text-red-500 hover:text-red-700">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </article>
+          ))}
+          <hr className="border-gray-200 my-4" />
+          <button
+            type="button"
+            className="flex items-center justify-center gap-2 border border-gray-300 rounded-md text-gray-700 text-xs font-semibold py-2 px-3 hover:bg-gray-50"
+          >
+            <Download className="w-4 h-4" />
+            Download Flows (JSON)
+          </button>
+        </section>
+        {/* Right sidebar */}
+        <aside className="flex flex-col gap-6 w-full max-w-sm">
+          {/* Add New Flow */}
+          <section className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col gap-2">
+            <h2 className="font-semibold text-gray-900 text-sm">Add New Flow</h2>
+            <p className="text-xs text-gray-600">Fill in the details to create a new flow.</p>
+            <button
+              type="button"
+              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md py-2 px-4 flex items-center justify-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Flow
+            </button>
+          </section>
+          {/* Flow Insights */}
+          <section className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col gap-4 text-gray-900 text-sm">
+            <h3 className="font-semibold text-gray-900 text-sm">Flow Insights</h3>
+            <p className="text-xs text-gray-700">Key metrics from your flow analysis</p>
+            <div className="flex gap-3">
+              <div className="flex flex-col items-center justify-center bg-blue-100 rounded-md w-20 h-16">
+                <span className="text-blue-700 font-bold text-lg leading-none">{metrics.totalFlows}</span>
+                <span className="text-xs text-blue-700">Total Flows</span>
+              </div>
+              <div className="flex flex-col items-center justify-center bg-green-100 rounded-md w-20 h-16">
+                <span className="text-green-700 font-bold text-lg leading-none">{metrics.keyActions}</span>
+                <span className="text-xs text-green-700">Key Actions</span>
+              </div>
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 text-xs mb-1">Platform Distribution</p>
+              {Object.entries(metrics.platformDistribution).map(([platform, count]) => (
+                <div key={platform} className="flex justify-between text-xs text-gray-600">
+                  <span>{platform}</span>
+                  <span className="bg-gray-200 text-gray-600 rounded-full px-2 py-0.5 font-semibold">{count}</span>
+                </div>
+              ))}
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 text-xs mb-1">Persona Types</p>
+              {Object.entries(metrics.personaTypes).map(([persona, count]) => (
+                <div key={persona} className="flex justify-between text-xs text-gray-600 mt-1">
+                  <span>{persona}</span>
+                  <span className="bg-gray-200 text-gray-600 rounded-full px-2 py-0.5 font-semibold">{count}</span>
+                </div>
+              ))}
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 text-xs mb-1">Flow Status</p>
+              {Object.entries(metrics.flowStatus).map(([status, count]) => (
+                <div key={status} className="flex justify-between text-xs text-gray-600">
+                  <span>{status}</span>
+                  <span className="bg-green-100 text-green-700 rounded-full px-2 py-0.5 font-semibold">{count}</span>
+                </div>
+              ))}
+            </div>
+            <hr className="border-gray-200" />
+            <div>
+              <p className="font-semibold text-gray-900 text-xs mb-1">Quick Actions</p>
+              <ul className="list-disc list-inside text-xs text-gray-700 space-y-0.5">
+                <li>Export flows as JSON</li>
+                <li>Generate flow diagrams</li>
+                <li>Analyze flow complexity</li>
+                <li>Create flow templates</li>
+              </ul>
+            </div>
+          </section>
+        </aside>
+      </main>
+    );
+  };
+
   // Clean up timers on unmount
   useEffect(() => {
     return () => {
@@ -772,7 +934,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack })
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'classification' ? renderClassificationTab() : (
+        {activeTab === 'classification' ? renderClassificationTab() : activeTab === 'flow-mapping' ? renderFlowMappingTab() : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Main Content */}
             <div className="lg:col-span-2 space-y-8">
