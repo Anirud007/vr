@@ -1377,5 +1377,3 @@ async function uploadDocument(file: File): Promise<any> {
     return {};
   }
 }
-
-export default ProjectDetail;
