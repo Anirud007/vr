@@ -890,32 +890,6 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
       ],
     };
 
-    const [selectedFlow, setSelectedFlow] = useState("Admin User - Web");
-    const [chatMessages, setChatMessages] = useState([
-      {
-        id: 1,
-        type: "assistant",
-        content:
-          "Hello! I'm your AI assistant for module generation. How can I help you streamline your business processes today?",
-        timestamp: new Date(Date.now() - 5 * 60000),
-      },
-      {
-        id: 2,
-        type: "user",
-        content:
-          "I need to create a new module for customer data processing, focusing on segmentation and personalized outreach.",
-        timestamp: new Date(Date.now() - 3 * 60000),
-      },
-      {
-        id: 3,
-        type: "assistant",
-        content:
-          "Excellent! For customer data processing and segmentation, let me define the key data points: demographics, purchase history, engagement metrics. What are the primary goals for personalized outreach? E.g., increasing conversion, improving retention, or promoting new products?",
-        timestamp: new Date(Date.now() - 1 * 60000),
-      },
-    ]);
-    const [newMessage, setNewMessage] = useState("");
-
     const getStatusColor = (status: string) => {
       switch (status) {
         case "generated":
