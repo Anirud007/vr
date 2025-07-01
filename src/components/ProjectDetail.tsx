@@ -908,23 +908,6 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
             <h3 className="font-semibold text-gray-900 text-sm">
               Flow Insights
             </h3>
-            <p className="text-xs text-gray-700">
-              Key metrics from your flow analysis
-            </p>
-            <div className="flex gap-3">
-              <div className="flex flex-col items-center justify-center bg-blue-100 rounded-md w-20 h-16">
-                <span className="text-blue-700 font-bold text-lg leading-none">
-                  {metrics.totalFlows}
-                </span>
-                <span className="text-xs text-blue-700">Total Flows</span>
-              </div>
-              <div className="flex flex-col items-center justify-center bg-green-100 rounded-md w-20 h-16">
-                <span className="text-green-700 font-bold text-lg leading-none">
-                  {metrics.keyActions}
-                </span>
-                <span className="text-xs text-green-700">Key Actions</span>
-              </div>
-            </div>
             <div>
               <p className="font-semibold text-gray-900 text-xs mb-1">
                 Platform Distribution
@@ -975,7 +958,6 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
                 </div>
               ))}
             </div>
-            <hr className="border-gray-200" />
             <div>
               <ul className="list-disc list-inside text-xs text-gray-700 space-y-0.5"></ul>
             </div>
