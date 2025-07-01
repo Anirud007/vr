@@ -818,58 +818,61 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
     return (
       <main className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 py-8 px-2 sm:px-6">
         {/* Left main content */}
-        <section className="bg-white rounded-lg border border-gray-200 p-6 flex-1 max-w-full md:max-w-3xl flex flex-col">
+        <section className="bg-gradient-to-br from-white to-blue-50/30 rounded-2xl border border-blue-100 shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 flex-1 max-w-full md:max-w-3xl flex flex-col">
           <header className="flex justify-between items-center mb-4">
-            <h1 className="text-lg font-semibold text-gray-900">
-              Flow Mapping for <span className="italic">SOW.pdf</span>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Flow Mapping for{" "}
+              <span className="italic font-medium">SOW.pdf</span>
             </h1>
             <button
               type="button"
-              className="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded px-3 py-1.5"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-semibold rounded-xl px-4 py-2.5 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
             >
               <Plus className="w-4 h-4" />
               Manage Flows
             </button>
           </header>
-          <p className="text-sm text-gray-700 mb-4">Persona-Platform Flows</p>
+          <p className="text-sm font-medium text-gray-600 mb-6 bg-blue-50/50 rounded-lg px-3 py-1 inline-block">
+            Persona-Platform Flows
+          </p>
           {/* Flow cards */}
           {flows.map((flow) => (
             <article
               key={flow.id}
-              className="border border-gray-200 rounded-md p-4 mb-4 text-gray-700 text-sm"
+              className="bg-gradient-to-r from-white to-gray-50/50 border border-gray-200 rounded-xl p-5 mb-5 text-gray-700 text-sm shadow-md hover:shadow-lg hover:border-blue-300 transition-all duration-300 transform hover:-translate-y-1"
             >
-              <header className="flex flex-wrap items-center gap-2 mb-1">
-                <h2 className="font-semibold text-gray-900">
+              <header className="flex flex-wrap items-center gap-3 mb-3">
+                <h2 className="font-bold text-gray-900 text-base">
                   {flow.persona} - {flow.platform}
                 </h2>
-                <span className="bg-green-100 text-green-700 text-[10px] font-semibold rounded-full px-2 py-0.5">
+                <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 text-[10px] font-bold rounded-full px-3 py-1 border border-green-200 shadow-sm">
                   {flow.status}
                 </span>
               </header>
-              <div className="mb-2 flex flex-wrap gap-2 text-xs text-gray-600">
-                <span>
+              <div className="mb-4 flex flex-wrap gap-3 text-xs text-gray-600">
+                <span className="flex items-center gap-1">
                   Platform:
-                  <span className="bg-gray-200 text-gray-800 font-semibold rounded px-1.5 py-0.5 ml-1">
+                  <span className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 font-semibold rounded-md px-2 py-1 ml-1 border border-blue-200 shadow-sm">
                     {flow.platform}
                   </span>
                 </span>
-                <span>
+                <span className="flex items-center gap-1">
                   Persona:
-                  <span className="bg-gray-200 text-gray-800 font-semibold rounded px-1.5 py-0.5 ml-1">
+                  <span className="bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 font-semibold rounded-md px-2 py-1 ml-1 border border-purple-200 shadow-sm">
                     {flow.persona}
                   </span>
                 </span>
               </div>
-              <div className="flex justify-end gap-3 mt-2">
+              <div className="flex justify-end gap-2 mt-3">
                 <button
                   aria-label={`Edit ${flow.persona} - ${flow.platform} flow`}
-                  className="text-gray-600 hover:text-gray-900"
+                  className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 border border-transparent hover:border-blue-200"
                 >
                   <Edit3 className="w-4 h-4" />
                 </button>
                 <button
                   aria-label={`Delete ${flow.persona} - ${flow.platform} flow`}
-                  className="text-red-500 hover:text-red-700"
+                  className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 border border-transparent hover:border-red-200"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -879,7 +882,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
           <hr className="border-gray-200 my-4" />
           <button
             type="button"
-            className="flex items-center justify-center gap-2 border border-gray-300 rounded-md text-gray-700 text-xs font-semibold py-2 px-3 hover:bg-gray-50"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-300 rounded-xl text-gray-700 text-sm font-semibold py-3 px-4 hover:from-blue-50 hover:to-blue-100 hover:border-blue-300 hover:text-blue-700 transition-all duration-300 shadow-sm hover:shadow-md"
           >
             <Download className="w-4 h-4" />
             Download Flows (JSON)
@@ -888,71 +891,73 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
         {/* Right sidebar */}
         <aside className="flex flex-col gap-6 w-full max-w-sm">
           {/* Add New Flow */}
-          <section className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col gap-2">
-            <h2 className="font-semibold text-gray-900 text-sm">
-              Add New Flow
-            </h2>
-            <p className="text-xs text-gray-600">
+          <section className="bg-gradient-to-br from-white to-blue-50/30 border border-blue-100 rounded-xl p-5 flex flex-col gap-3 shadow-md hover:shadow-lg transition-shadow duration-300">
+            <h2 className="font-bold text-gray-900 text-base">Add New Flow</h2>
+            <p className="text-sm text-gray-600 leading-relaxed">
               Fill in the details to create a new flow.
             </p>
             <button
               type="button"
-              className="mt-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md py-2 px-4 flex items-center justify-center gap-2"
+              className="mt-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-bold rounded-xl py-3 px-4 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200"
             >
               <Plus className="w-4 h-4" />
               Add Flow
             </button>
           </section>
           {/* Flow Insights */}
-          <section className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col gap-4 text-gray-900 text-sm">
-            <h3 className="font-semibold text-gray-900 text-sm">
+          <section className="bg-gradient-to-br from-white to-purple-50/30 border border-purple-100 rounded-xl p-5 flex flex-col gap-5 text-gray-900 text-sm shadow-md hover:shadow-lg transition-shadow duration-300">
+            <h3 className="font-bold text-gray-900 text-base flex items-center gap-2">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
               Flow Insights
             </h3>
-            <div>
-              <p className="font-semibold text-gray-900 text-xs mb-1">
+            <div className="bg-blue-50/50 rounded-lg p-3 border border-blue-100">
+              <p className="font-bold text-gray-900 text-sm mb-2 flex items-center gap-1">
+                <Globe className="w-3 h-3 text-blue-600" />
                 Platform Distribution
               </p>
               {Object.entries(metrics.platformDistribution).map(
                 ([platform, count]) => (
                   <div
                     key={platform}
-                    className="flex justify-between text-xs text-gray-600"
+                    className="flex justify-between text-sm text-gray-700 py-1"
                   >
-                    <span>{platform}</span>
-                    <span className="bg-gray-200 text-gray-600 rounded-full px-2 py-0.5 font-semibold">
+                    <span className="font-medium">{platform}</span>
+                    <span className="bg-blue-200 text-blue-800 rounded-full px-2 py-0.5 font-bold text-xs shadow-sm">
                       {count}
                     </span>
                   </div>
                 ),
               )}
             </div>
-            <div>
-              <p className="font-semibold text-gray-900 text-xs mb-1">
+            <div className="bg-purple-50/50 rounded-lg p-3 border border-purple-100">
+              <p className="font-bold text-gray-900 text-sm mb-2 flex items-center gap-1">
+                <Users className="w-3 h-3 text-purple-600" />
                 Persona Types
               </p>
               {Object.entries(metrics.personaTypes).map(([persona, count]) => (
                 <div
                   key={persona}
-                  className="flex justify-between text-xs text-gray-600 mt-1"
+                  className="flex justify-between text-sm text-gray-700 py-1"
                 >
-                  <span>{persona}</span>
-                  <span className="bg-gray-200 text-gray-600 rounded-full px-2 py-0.5 font-semibold">
+                  <span className="font-medium">{persona}</span>
+                  <span className="bg-purple-200 text-purple-800 rounded-full px-2 py-0.5 font-bold text-xs shadow-sm">
                     {count}
                   </span>
                 </div>
               ))}
             </div>
-            <div>
-              <p className="font-semibold text-gray-900 text-xs mb-1">
+            <div className="bg-green-50/50 rounded-lg p-3 border border-green-100">
+              <p className="font-bold text-gray-900 text-sm mb-2 flex items-center gap-1">
+                <CheckCircle className="w-3 h-3 text-green-600" />
                 Flow Status
               </p>
               {Object.entries(metrics.flowStatus).map(([status, count]) => (
                 <div
                   key={status}
-                  className="flex justify-between text-xs text-gray-600"
+                  className="flex justify-between text-sm text-gray-700 py-1"
                 >
-                  <span>{status}</span>
-                  <span className="bg-green-100 text-green-700 rounded-full px-2 py-0.5 font-semibold">
+                  <span className="font-medium">{status}</span>
+                  <span className="bg-green-200 text-green-800 rounded-full px-2 py-0.5 font-bold text-xs shadow-sm">
                     {count}
                   </span>
                 </div>
