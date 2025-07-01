@@ -363,6 +363,37 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
   ]);
   const [newMessage, setNewMessage] = useState("");
 
+  // Features state
+  const [selectedPersonaChannel, setSelectedPersonaChannel] =
+    useState("Admin User - Web");
+  const [selectedModule, setSelectedModule] = useState(
+    "User Management Module",
+  );
+  const [featuresChatMessages, setFeaturesChatMessages] = useState([
+    {
+      id: 1,
+      type: "assistant" as const,
+      content:
+        "Hi! I'm here to help you define and refine features for your modules. What specific functionality would you like to explore?",
+      timestamp: new Date(Date.now() - 4 * 60000),
+    },
+    {
+      id: 2,
+      type: "user" as const,
+      content:
+        "I need to add advanced filtering capabilities to the user management module.",
+      timestamp: new Date(Date.now() - 2 * 60000),
+    },
+    {
+      id: 3,
+      type: "assistant" as const,
+      content:
+        "Great! For advanced filtering in user management, I suggest: multi-criteria filters (role, status, department), saved filter presets, real-time search, and bulk actions on filtered results. Would you like me to detail the implementation for any of these?",
+      timestamp: new Date(Date.now() - 30000),
+    },
+  ]);
+  const [newFeaturesMessage, setNewFeaturesMessage] = useState("");
+
   const tabs = [
     { id: "upload", label: "Document Upload", icon: Upload },
     { id: "classification", label: "Classification", icon: FileText },
@@ -797,6 +828,560 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
                 </div>
               );
             })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderFeaturesTab = () => {
+    // Mock data for features by persona-channel and module
+    const featuresByPersonaChannel = {
+      "Admin User - Web": {
+        "User Management Module": [
+          {
+            id: "feat-1",
+            name: "Advanced User Search & Filtering",
+            description:
+              "Multi-criteria search with real-time filtering and saved presets",
+            priority: "high",
+            status: "implemented",
+            category: "Core Functionality",
+            effort: "8 hours",
+            dependencies: ["Search API", "Filter Engine"],
+            specs: [
+              "Real-time search as you type",
+              "Filter by role, status, department",
+              "Save and share filter presets",
+              "Export filtered results",
+            ],
+          },
+          {
+            id: "feat-2",
+            name: "Bulk User Operations",
+            description:
+              "Batch actions for multiple user accounts simultaneously",
+            priority: "high",
+            status: "in-progress",
+            category: "Productivity",
+            effort: "12 hours",
+            dependencies: ["User API", "Audit System"],
+            specs: [
+              "Select multiple users",
+              "Bulk activate/deactivate",
+              "Bulk role assignment",
+              "Confirmation dialogs",
+            ],
+          },
+          {
+            id: "feat-3",
+            name: "User Activity Timeline",
+            description:
+              "Comprehensive view of user actions and system interactions",
+            priority: "medium",
+            status: "planned",
+            category: "Analytics",
+            effort: "16 hours",
+            dependencies: ["Activity Tracking", "Timeline UI"],
+            specs: [
+              "Chronological activity feed",
+              "Filter by activity type",
+              "Export activity reports",
+              "Real-time updates",
+            ],
+          },
+        ],
+        "Authentication Module": [
+          {
+            id: "feat-4",
+            name: "Multi-Factor Authentication",
+            description:
+              "Enhanced security with multiple authentication factors",
+            priority: "high",
+            status: "implemented",
+            category: "Security",
+            effort: "20 hours",
+            dependencies: ["SMS API", "TOTP Library"],
+            specs: [
+              "SMS verification",
+              "Authenticator app support",
+              "Backup codes",
+              "Remember device option",
+            ],
+          },
+          {
+            id: "feat-5",
+            name: "Social Login Integration",
+            description: "OAuth integration with popular social platforms",
+            priority: "medium",
+            status: "planned",
+            category: "User Experience",
+            effort: "24 hours",
+            dependencies: ["OAuth Providers", "Account Linking"],
+            specs: [
+              "Google OAuth",
+              "Microsoft OAuth",
+              "Account linking",
+              "Profile sync",
+            ],
+          },
+        ],
+      },
+      "End User - Web": {
+        "User Profile Module": [
+          {
+            id: "feat-6",
+            name: "Customizable Profile Dashboard",
+            description: "Personalized dashboard with drag-and-drop widgets",
+            priority: "high",
+            status: "in-progress",
+            category: "Personalization",
+            effort: "32 hours",
+            dependencies: ["Widget System", "Layout Engine"],
+            specs: [
+              "Drag-and-drop interface",
+              "Widget marketplace",
+              "Custom themes",
+              "Layout presets",
+            ],
+          },
+          {
+            id: "feat-7",
+            name: "Advanced Privacy Controls",
+            description: "Granular privacy settings and data management",
+            priority: "high",
+            status: "implemented",
+            category: "Privacy",
+            effort: "16 hours",
+            dependencies: ["Privacy API", "Consent Management"],
+            specs: [
+              "Visibility controls",
+              "Data export",
+              "Account deletion",
+              "Consent management",
+            ],
+          },
+        ],
+        "Content Consumption Module": [
+          {
+            id: "feat-8",
+            name: "AI-Powered Recommendations",
+            description:
+              "Intelligent content suggestions based on user behavior",
+            priority: "medium",
+            status: "planned",
+            category: "Intelligence",
+            effort: "40 hours",
+            dependencies: ["ML Pipeline", "Recommendation Engine"],
+            specs: [
+              "Behavior analysis",
+              "Collaborative filtering",
+              "Content similarity",
+              "Real-time updates",
+            ],
+          },
+          {
+            id: "feat-9",
+            name: "Offline Content Access",
+            description: "Download and sync content for offline viewing",
+            priority: "low",
+            status: "planned",
+            category: "Accessibility",
+            effort: "28 hours",
+            dependencies: ["Sync Engine", "Local Storage"],
+            specs: [
+              "Download queue",
+              "Automatic sync",
+              "Storage management",
+              "Offline indicators",
+            ],
+          },
+        ],
+      },
+    };
+
+    const getStatusColor = (status: string) => {
+      switch (status) {
+        case "implemented":
+          return "bg-green-100 text-green-700 border-green-200";
+        case "in-progress":
+          return "bg-blue-100 text-blue-700 border-blue-200";
+        case "planned":
+          return "bg-yellow-100 text-yellow-700 border-yellow-200";
+        default:
+          return "bg-gray-100 text-gray-700 border-gray-200";
+      }
+    };
+
+    const getPriorityColor = (priority: string) => {
+      switch (priority) {
+        case "high":
+          return "bg-red-100 text-red-700 border-red-200";
+        case "medium":
+          return "bg-orange-100 text-orange-700 border-orange-200";
+        case "low":
+          return "bg-green-100 text-green-700 border-green-200";
+        default:
+          return "bg-gray-100 text-gray-700 border-gray-200";
+      }
+    };
+
+    const getStatusIcon = (status: string) => {
+      switch (status) {
+        case "implemented":
+          return <CheckCircle className="w-4 h-4" />;
+        case "in-progress":
+          return <Clock className="w-4 h-4" />;
+        case "planned":
+          return <Calendar className="w-4 h-4" />;
+        default:
+          return <Clock className="w-4 h-4" />;
+      }
+    };
+
+    const handleSendFeaturesMessage = () => {
+      if (!newFeaturesMessage.trim()) return;
+
+      const userMessage = {
+        id: featuresChatMessages.length + 1,
+        type: "user" as const,
+        content: newFeaturesMessage,
+        timestamp: new Date(),
+      };
+
+      setFeaturesChatMessages([...featuresChatMessages, userMessage]);
+      setNewFeaturesMessage("");
+
+      // Simulate AI response
+      setTimeout(() => {
+        const aiResponse = {
+          id: featuresChatMessages.length + 2,
+          type: "assistant" as const,
+          content:
+            "I can help you refine that feature! Based on your requirements and the reference design, let me suggest some specific implementation details and user experience improvements...",
+          timestamp: new Date(),
+        };
+        setFeaturesChatMessages((prev) => [...prev, aiResponse]);
+      }, 1000);
+    };
+
+    const currentPersonaChannelData =
+      featuresByPersonaChannel[
+        selectedPersonaChannel as keyof typeof featuresByPersonaChannel
+      ];
+    const availableModules = currentPersonaChannelData
+      ? Object.keys(currentPersonaChannelData)
+      : [];
+    const currentFeatures =
+      currentPersonaChannelData && selectedModule
+        ? currentPersonaChannelData[
+            selectedModule as keyof typeof currentPersonaChannelData
+          ] || []
+        : [];
+
+    return (
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-0 pb-4 border-b border-gray-200">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <Star className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                Feature Management
+              </h1>
+              <p className="text-sm text-gray-600">
+                Define and manage features for each persona-channel module
+                combination
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 items-center">
+            <button className="border border-gray-300 rounded-xl px-4 py-2 flex items-center gap-2 text-sm bg-white hover:bg-gray-50 font-medium shadow-sm">
+              <Download className="h-4 w-4" /> Export Features
+            </button>
+            <button className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl px-4 py-2 flex items-center gap-2 text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-105 transition-all">
+              <Plus className="h-4 w-4" /> New Feature
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Panel - Feature Management */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Persona-Channel Selector */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Select Persona-Channel
+              </h2>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {Object.keys(featuresByPersonaChannel).map((personaChannel) => (
+                  <button
+                    key={personaChannel}
+                    onClick={() => {
+                      setSelectedPersonaChannel(personaChannel);
+                      const modules = Object.keys(
+                        featuresByPersonaChannel[
+                          personaChannel as keyof typeof featuresByPersonaChannel
+                        ],
+                      );
+                      if (modules.length > 0) setSelectedModule(modules[0]);
+                    }}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                      selectedPersonaChannel === personaChannel
+                        ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    {personaChannel}
+                  </button>
+                ))}
+              </div>
+
+              {/* Module Selector */}
+              <h3 className="text-md font-semibold text-gray-900 mb-3">
+                Select Module
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {availableModules.map((module) => (
+                  <button
+                    key={module}
+                    onClick={() => setSelectedModule(module)}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                      selectedModule === module
+                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm"
+                        : "bg-blue-50 text-blue-700 hover:bg-blue-100"
+                    }`}
+                  >
+                    {module}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Features List */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Features for {selectedModule}
+                </h2>
+                <span className="text-sm text-gray-600">
+                  {currentFeatures.length} features
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                {currentFeatures.map((feature) => (
+                  <div
+                    key={feature.id}
+                    className="bg-gradient-to-r from-white to-gray-50/50 border border-gray-200 rounded-xl p-5 hover:shadow-lg hover:border-emerald-300 transition-all duration-300"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-lg flex items-center justify-center">
+                          <Star className="w-5 h-5 text-emerald-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-gray-900">
+                            {feature.name}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {feature.description}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <div
+                          className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold border ${getStatusColor(feature.status)}`}
+                        >
+                          {getStatusIcon(feature.status)}
+                          {feature.status}
+                        </div>
+                        <div
+                          className={`px-2 py-1 rounded-full text-xs font-semibold border ${getPriorityColor(feature.priority)}`}
+                        >
+                          {feature.priority}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs mb-4">
+                      <div>
+                        <p className="font-semibold text-gray-700 mb-1">
+                          Category & Effort
+                        </p>
+                        <div className="space-y-1">
+                          <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-medium">
+                            {feature.category}
+                          </span>
+                          <div className="flex items-center gap-1 text-gray-600">
+                            <Clock className="w-3 h-3" />
+                            {feature.effort}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <p className="font-semibold text-gray-700 mb-1">
+                          Dependencies ({feature.dependencies.length})
+                        </p>
+                        <div className="flex flex-wrap gap-1">
+                          {feature.dependencies.slice(0, 2).map((dep, idx) => (
+                            <span
+                              key={idx}
+                              className="bg-orange-100 text-orange-700 px-2 py-1 rounded text-[10px] font-medium"
+                            >
+                              {dep}
+                            </span>
+                          ))}
+                          {feature.dependencies.length > 2 && (
+                            <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-[10px]">
+                              +{feature.dependencies.length - 2}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div>
+                        <p className="font-semibold text-gray-700 mb-1">
+                          Specifications ({feature.specs.length})
+                        </p>
+                        <ul className="space-y-1">
+                          {feature.specs.slice(0, 2).map((spec, idx) => (
+                            <li key={idx} className="flex items-start gap-1">
+                              <div className="w-1 h-1 bg-emerald-500 rounded-full mt-1.5 flex-shrink-0"></div>
+                              <span className="text-gray-600 leading-tight">
+                                {spec}
+                              </span>
+                            </li>
+                          ))}
+                          {feature.specs.length > 2 && (
+                            <li className="text-gray-500">
+                              +{feature.specs.length - 2} more specs
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Calendar className="w-3 h-3" />
+                        Last updated 1 hour ago
+                      </div>
+                      <div className="flex gap-2">
+                        <button className="text-emerald-600 hover:bg-emerald-50 p-2 rounded-lg transition-colors">
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button className="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition-colors">
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button className="text-purple-600 hover:bg-purple-50 p-2 rounded-lg transition-colors">
+                          <Copy className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Panel - AI Chatbot */}
+          <div className="bg-gradient-to-br from-white to-emerald-50/30 rounded-2xl shadow-lg border border-emerald-100 flex flex-col h-[800px]">
+            {/* Chat Header */}
+            <div className="p-4 border-b border-emerald-200">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center">
+                  <Lightbulb className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900">Feature Assistant</h3>
+                  <p className="text-xs text-gray-600">
+                    Online • Ready to help with features
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Reference Image */}
+            <div className="p-4 border-b border-emerald-200">
+              <p className="text-sm font-semibold text-gray-700 mb-2">
+                Reference Design
+              </p>
+              <div className="relative">
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F27bca98306f84be092672e37c6cd85fd%2F2e8c094371cf49918036551581b5a8cb?format=webp&width=800"
+                  alt="Reference design for feature development"
+                  className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                />
+                <div className="absolute top-2 right-2">
+                  <button className="bg-white/90 backdrop-blur-sm p-1 rounded text-gray-600 hover:bg-white transition-colors">
+                    <Maximize2 className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+              <p className="text-xs text-gray-600 mt-1">
+                AI can reference this design for feature suggestions
+              </p>
+            </div>
+
+            {/* Chat Messages */}
+            <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+              {featuresChatMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`max-w-[80%] p-3 rounded-2xl ${
+                      message.type === "user"
+                        ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white"
+                        : "bg-white border border-gray-200 text-gray-800 shadow-sm"
+                    }`}
+                  >
+                    <p className="text-sm">{message.content}</p>
+                    <p
+                      className={`text-xs mt-1 ${message.type === "user" ? "text-emerald-100" : "text-gray-500"}`}
+                    >
+                      {message.timestamp.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Chat Input */}
+            <div className="p-4 border-t border-emerald-200">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newFeaturesMessage}
+                  onChange={(e) => setNewFeaturesMessage(e.target.value)}
+                  onKeyPress={(e) =>
+                    e.key === "Enter" && handleSendFeaturesMessage()
+                  }
+                  placeholder="Describe feature requirements or ask for refinements..."
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
+                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                  <Paperclip className="w-4 h-4" />
+                </button>
+                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                  <Upload className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleSendFeaturesMessage}
+                  className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-2 rounded-xl hover:shadow-md transition-all"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1524,6 +2109,8 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
           renderFlowMappingTab()
         ) : activeTab === "modules" ? (
           renderModuleGenerationTab()
+        ) : activeTab === "features" ? (
+          renderFeaturesTab()
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Main Content */}
